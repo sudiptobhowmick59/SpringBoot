@@ -2,6 +2,8 @@ package com.aws.poc.dto;
 
 import java.io.Serializable;
 
+import org.springframework.util.StringUtils;
+
 public class Student implements Serializable{
 
 	private static final long serialVersionUID = 1L;
@@ -15,6 +17,10 @@ public class Student implements Serializable{
 	private String schoolName;
 
 	
+	public Student() {
+		super();
+	}
+
 	public Student(String name, Integer rollNumber, String department, String schoolName) {
 		super();
 		this.name = name;
@@ -55,6 +61,13 @@ public class Student implements Serializable{
 		this.schoolName = schoolName;
 	}
 	
-
+	public Boolean validate(){
+		if (StringUtils.isEmpty(rollNumber) || StringUtils.isEmpty(name) 
+				|| StringUtils.isEmpty(department) || StringUtils.isEmpty(schoolName) ){
+			return Boolean.FALSE;
+		}
+		
+		return Boolean.TRUE;
+	}
 	
 }
