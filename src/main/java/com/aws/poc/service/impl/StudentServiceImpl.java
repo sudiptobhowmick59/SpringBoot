@@ -14,8 +14,6 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
@@ -48,13 +46,13 @@ public class StudentServiceImpl implements StudentService {
 		
 		String awsId = "";
 		String awsKey = "";
-		BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsId, awsKey);
+		//BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsId, awsKey);
 		
-		s3Client = AmazonS3ClientBuilder
+		s3Client = AmazonS3ClientBuilder.defaultClient();/*AmazonS3ClientBuilder
 				.standard()
 				.withRegion("us-east-1")
-				.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-				.build();
+				.withCredentials(new ProfileCredentialsProvider())
+				.build();*/
 	}
 	
 	@Override
