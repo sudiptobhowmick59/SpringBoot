@@ -1,9 +1,8 @@
 package com.aws.poc.service.impl;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -15,16 +14,24 @@ import javax.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.GetObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.S3Object;
 import com.aws.poc.dto.Student;
 import com.aws.poc.service.StudentService;
 
 @Service
 public class StudentServiceImpl implements StudentService {
 
+	AmazonS3 s3Client = null;
 	
 	public List<Student> students = new ArrayList<Student>();
 	
-	private static String UPLOADED_FOLDER = "F://temp//";
+	//private static String UPLOADED_FOLDER = "D://Sudipto_sxb9638//DD_Logs//";
 	
 	public Comparator<Student> sortByRollNumber = (student1, student2) -> student1.getRollNumber().compareTo(student2.getRollNumber());
 	
@@ -38,6 +45,16 @@ public class StudentServiceImpl implements StudentService {
 		students.add(s2);
 		students.add(s3);
 		Collections.sort(students, sortByRollNumber);
+		
+		String awsId = "AKIAJSM2DMW43CHULDRQ";
+		String awsKey = "q1q7q8VyzxUTJCwB3QJRrkMb9rQre1oLnanw1/iU";
+		BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsId, awsKey);
+		
+		s3Client = AmazonS3ClientBuilder
+				.standard()
+				.withRegion("us-east-1")
+				.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+				.build();
 	}
 	
 	@Override
@@ -89,10 +106,21 @@ public class StudentServiceImpl implements StudentService {
 	
 	@Override
     public void saveUploadedFiles (MultipartFile file) throws IOException {
-        byte[] bytes = file.getBytes();
-        System.out.println("File name is : " + file.getOriginalFilename());
-        //Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
-        //Files.write(path, bytes);
+		s3Client.putObject(new PutObjectRequest("sudipto-aws-poc-springboot", file.getOriginalFilename(), convert(file)));
     }
+	
+	@Override
+    public S3Object getFilesFromS3 (String fileName) throws IOException {
+		return s3Client.getObject(new GetObjectRequest("sudipto-aws-poc-springboot", fileName));
+	}
+	
+	public File convert(MultipartFile file) throws IOException {
+	    File convFile = new File(file.getOriginalFilename());
+	    convFile.createNewFile();
+	    FileOutputStream fos = new FileOutputStream(convFile);
+	    fos.write(file.getBytes());
+	    fos.close();
+	    return convFile;
+	}
 
 }
