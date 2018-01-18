@@ -1,13 +1,17 @@
 package com.aws.poc.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.aws.poc.dto.Student;
 import com.aws.poc.dto.StudentError;
@@ -49,6 +53,19 @@ public class StudentController {
 		}else{
 			return new StudentError("503", "Please send a valid roll number");
 		}
+	}
+	
+	@PostMapping("/student/upload")
+	public Object uploadFile(@RequestParam("file") MultipartFile uploadfile) throws IOException{
+		
+		if(null != uploadfile && uploadfile.isEmpty()){
+			return new StudentError("503", "Please upload a valid file");
+		}
+		
+		studentSvc.saveUploadedFiles(uploadfile);
+		
+		return "File Sucessfully Uploaded";
+		
 	}
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)

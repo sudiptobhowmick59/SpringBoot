@@ -1,5 +1,9 @@
 package com.aws.poc.service.impl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -9,6 +13,7 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.aws.poc.dto.Student;
 import com.aws.poc.service.StudentService;
@@ -18,6 +23,8 @@ public class StudentServiceImpl implements StudentService {
 
 	
 	public List<Student> students = new ArrayList<Student>();
+	
+	private static String UPLOADED_FOLDER = "F://temp//";
 	
 	public Comparator<Student> sortByRollNumber = (student1, student2) -> student1.getRollNumber().compareTo(student2.getRollNumber());
 	
@@ -79,5 +86,13 @@ public class StudentServiceImpl implements StudentService {
 		Collections.sort(students, sortByRollNumber);
 		return students;
 	}
+	
+	@Override
+    public void saveUploadedFiles (MultipartFile file) throws IOException {
+        byte[] bytes = file.getBytes();
+        System.out.println("File name is : " + file.getOriginalFilename());
+        //Path path = Paths.get(UPLOADED_FOLDER + file.getOriginalFilename());
+        //Files.write(path, bytes);
+    }
 
 }
