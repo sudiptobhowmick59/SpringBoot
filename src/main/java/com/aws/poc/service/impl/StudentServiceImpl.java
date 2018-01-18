@@ -46,8 +46,8 @@ public class StudentServiceImpl implements StudentService {
 		students.add(s3);
 		Collections.sort(students, sortByRollNumber);
 		
-		String awsId = "AKIAJSM2DMW43CHULDRQ";
-		String awsKey = "q1q7q8VyzxUTJCwB3QJRrkMb9rQre1oLnanw1/iU";
+		String awsId = "";
+		String awsKey = "";
 		BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsId, awsKey);
 		
 		s3Client = AmazonS3ClientBuilder
