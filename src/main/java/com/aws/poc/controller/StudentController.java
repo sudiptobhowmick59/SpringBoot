@@ -37,6 +37,15 @@ public class StudentController {
 		return studentSvc.getStudents();
 	}
 	
+	@GetMapping(value="/student/find/{name}")
+	public Object findStudentByName(@PathVariable("name") String name){
+		if((null != name) && name.length() > 0){
+			return  studentSvc.getStudentInfo(name);
+		}else{
+			return new StudentError("503", "Please send a name");
+		}
+	}
+	
 	@RequestMapping(value="/student/add", method=RequestMethod.PUT)
 	public Object addStudents(@RequestBody Student newStudent){
 		if(newStudent.validate()){

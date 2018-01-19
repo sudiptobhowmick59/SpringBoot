@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,11 +21,15 @@ import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.aws.poc.dto.Student;
+import com.aws.poc.repo.StudentRepository;
 import com.aws.poc.service.StudentService;
 
 @Service
 public class StudentServiceImpl implements StudentService {
 
+	@Autowired
+	StudentRepository studentRepo;
+	
 	AmazonS3 s3Client = null;
 	
 	public List<Student> students = new ArrayList<Student>();
@@ -44,8 +49,8 @@ public class StudentServiceImpl implements StudentService {
 		students.add(s3);
 		Collections.sort(students, sortByRollNumber);
 		
-		String awsId = "";
-		String awsKey = "";
+		//String awsId = "";
+		//String awsKey = "";
 		//BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsId, awsKey);
 		
 		s3Client = AmazonS3ClientBuilder.defaultClient();/*AmazonS3ClientBuilder
@@ -111,6 +116,12 @@ public class StudentServiceImpl implements StudentService {
     public S3Object getFilesFromS3 (String fileName) throws IOException {
 		return s3Client.getObject(new GetObjectRequest("sudipto-aws-poc-springboot", fileName));
 	}
+	
+	@Override
+    public List<com.aws.poc.model.Student> getStudentInfo (String name){
+		return studentRepo.findByName(name);
+	}
+	
 	
 	public File convert(MultipartFile file) throws IOException {
 	    File convFile = new File(file.getOriginalFilename());
