@@ -11,20 +11,27 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.aws.poc.dto.Student;
+import com.aws.poc.dynamodb.repo.StudentDynamoDBRepo;
 import com.aws.poc.service.StudentService;
 
 @Service
 public class StudentServiceImpl implements StudentService {
 
+	@Autowired
+	StudentDynamoDBRepo stuRepo;
+	
 	AmazonS3 s3Client = null;
 	
 	public List<Student> students = new ArrayList<Student>();
@@ -44,20 +51,27 @@ public class StudentServiceImpl implements StudentService {
 		students.add(s3);
 		Collections.sort(students, sortByRollNumber);
 		
-		String awsId = "";
-		String awsKey = "";
-		//BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsId, awsKey);
+		String awsId = "55";
+		String awsKey = "333";
+		BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsId, awsKey);
 		
-		s3Client = AmazonS3ClientBuilder.defaultClient();/*AmazonS3ClientBuilder
+		//Enable this to run in EC2
+		//s3Client = AmazonS3ClientBuilder.defaultClient();
+		s3Client = AmazonS3ClientBuilder
 				.standard()
 				.withRegion("us-east-1")
-				.withCredentials(new ProfileCredentialsProvider())
-				.build();*/
+				.withCredentials(new AWSStaticCredentialsProvider(awsCreds))
+				.build();
 	}
 	
 	@Override
 	public List<Student> getStudents() {
 		return students;
+	}
+	
+	@Override
+	public Object getAllStudents() {
+		return stuRepo.findAll();
 	}
 
 	@Override

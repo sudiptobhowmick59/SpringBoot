@@ -37,6 +37,11 @@ public class StudentController {
 		return studentSvc.getStudents();
 	}
 	
+	@RequestMapping(value="/dynamo/students", method=RequestMethod.GET)
+	public Object getAllStudents(){
+		return studentSvc.getAllStudents();
+	}
+	
 	@RequestMapping(value="/student/add", method=RequestMethod.PUT)
 	public Object addStudents(@RequestBody Student newStudent){
 		if(newStudent.validate()){
