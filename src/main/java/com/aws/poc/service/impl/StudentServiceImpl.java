@@ -11,20 +11,28 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.aws.poc.dto.Student;
+import com.aws.poc.mongodb.repo.StudentMongoRepo;
 import com.aws.poc.service.StudentService;
 
 @Service
 public class StudentServiceImpl implements StudentService {
 
+	@Autowired
+	StudentMongoRepo mongoRepo;
+	
+	@Autowired
+	MongoTemplate mongoTmpl;
+	
 	AmazonS3 s3Client = null;
 	
 	public List<Student> students = new ArrayList<Student>();
@@ -44,11 +52,12 @@ public class StudentServiceImpl implements StudentService {
 		students.add(s3);
 		Collections.sort(students, sortByRollNumber);
 		
-		String awsId = "";
-		String awsKey = "";
+		//String awsId = "";
+		//String awsKey = "";
 		//BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsId, awsKey);
 		
-		s3Client = AmazonS3ClientBuilder.defaultClient();/*AmazonS3ClientBuilder
+		//s3Client = AmazonS3ClientBuilder.defaultClient();
+		/*AmazonS3ClientBuilder
 				.standard()
 				.withRegion("us-east-1")
 				.withCredentials(new ProfileCredentialsProvider())
@@ -110,6 +119,26 @@ public class StudentServiceImpl implements StudentService {
 	@Override
     public S3Object getFilesFromS3 (String fileName) throws IOException {
 		return s3Client.getObject(new GetObjectRequest("sudipto-aws-poc-springboot", fileName));
+	}
+	
+	@Override
+	public void saveToMongoDB(Student newStudent){
+		if(null != newStudent && newStudent.validate()){
+			com.aws.poc.mongodb.model.Student record = new  com.aws.poc.mongodb.model.Student();
+			record.setDepartment(newStudent.getDepartment());
+			record.setName(newStudent.getName());
+			record.setRollNumber(String.valueOf((newStudent.getRollNumber())));
+			record.setSchoolName(newStudent.getSchoolName());
+			
+			mongoTmpl.save(record, "Student");
+		}
+		
+	}
+	
+	@Override
+	public List<com.aws.poc.mongodb.model.Student> findAll(){
+		return mongoRepo.findAll();
+		
 	}
 	
 	public File convert(MultipartFile file) throws IOException {

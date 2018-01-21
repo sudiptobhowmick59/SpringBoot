@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -99,6 +100,21 @@ public class StudentController {
 	            .contentType(MediaType.parseMediaType(mimeType))
 	            .body(resource);
 		
+	}
+	
+	@GetMapping(value="/mongo/students")
+	public List<com.aws.poc.mongodb.model.Student> findAllMongo(){
+		return studentSvc.findAll();
+	}
+	
+	@PutMapping(value="mongo/student/add")
+	public Object addStudentsToMongo(@RequestBody Student newStudent){
+		if(newStudent.validate()){
+			studentSvc.saveToMongoDB(newStudent);
+			return "Student Added to Mongo";
+		}else{
+			return new StudentError("503", "Please send a valid Student record");
+		}
 	}
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)

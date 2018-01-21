@@ -22,4 +22,8 @@ public interface StudentService {
 	public void saveUploadedFiles(MultipartFile file) throws IOException;
 
 	public S3Object getFilesFromS3(String fileName) throws IOException;
+
+	public void saveToMongoDB(Student newStudent);
+
+	public List<com.aws.poc.mongodb.model.Student> findAll();
 }
