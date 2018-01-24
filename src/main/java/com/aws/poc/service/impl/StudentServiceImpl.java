@@ -11,6 +11,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,10 +22,15 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.aws.poc.dto.Student;
 import com.aws.poc.service.StudentService;
+import com.aws.poc.sqlserver.model.POCTable;
+import com.aws.poc.sqlserver.repo.StoreDCRepo;
 
 @Service
 public class StudentServiceImpl implements StudentService {
 
+	@Autowired
+	StoreDCRepo storeDcRepo;
+	
 	AmazonS3 s3Client = null;
 	
 	public List<Student> students = new ArrayList<Student>();
@@ -48,7 +54,8 @@ public class StudentServiceImpl implements StudentService {
 		String awsKey = "";
 		//BasicAWSCredentials awsCreds = new BasicAWSCredentials(awsId, awsKey);
 		
-		s3Client = AmazonS3ClientBuilder.defaultClient();/*AmazonS3ClientBuilder
+		//s3Client = AmazonS3ClientBuilder.defaultClient();
+		/*AmazonS3ClientBuilder
 				.standard()
 				.withRegion("us-east-1")
 				.withCredentials(new ProfileCredentialsProvider())
@@ -119,6 +126,11 @@ public class StudentServiceImpl implements StudentService {
 	    fos.write(file.getBytes());
 	    fos.close();
 	    return convFile;
+	}
+
+	@Override
+	public List<POCTable> findAllStoreDC() {
+		return (List<POCTable>) storeDcRepo.findAll();
 	}
 
 }
