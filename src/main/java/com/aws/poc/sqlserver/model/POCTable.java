@@ -15,60 +15,21 @@ public class POCTable extends BaseEntity implements Serializable
 	private static final long serialVersionUID = 1L;
 
 	@Id
-    @Column(name = "StoreDcId")
-    private int storeDcId;
+    @Column(name = "Id")
+    private int id;
 	
-    @Column(name = "StoreId")
-    private String storeId;
+    @Column(name = "Name")
+    private String name;
 
-    @Column(name = "DcCode")
-    private String dcCode;
+    @Column(name = "Email")
+    private String email;
 
-    @Column(name = "DCName")
-    private String dcName;
+    @Column(name = "Phone")
+    private String phone;
     
-    @Column(name = "OwnerId")
-    private String ownerId;
+    @Column(name = "Gender")
+    private String gender;
 
     
-    public int getStoreDcId() {
-		return storeDcId;
-	}
-
-	public void setStoreDcId(int storeDcId) {
-		this.storeDcId = storeDcId;
-	}
-	
-	public String getStoreId() {
-		return storeId;
-	}
-
-	public void setStoreId(String storeId) {
-		this.storeId = storeId;
-	}
-
-	public String getDcCode() {
-		return dcCode;
-	}
-
-	public void setDcCode(String dcCode) {
-		this.dcCode = dcCode;
-	}
-
-	public String getDcName() {
-		return dcName;
-	}
-
-	public void setDcName(String dcName) {
-		this.dcName = dcName;
-	}
-
-	public String getOwnerId() {
-		return ownerId;
-	}
-
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}
     
 }

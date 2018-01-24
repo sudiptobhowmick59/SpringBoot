@@ -6,10 +6,6 @@ import java.sql.Timestamp;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
-/**
- * @author sussain
- * @version $Revision: 1$
- */
 @MappedSuperclass
 public class BaseEntity implements Serializable
 {
@@ -27,22 +23,6 @@ public class BaseEntity implements Serializable
     @Column(name = "UPDT_TMSTMP")
     private Timestamp updateTS;
 
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("CREATE_ID: [").append(createId).append("]");
-        sb.append("\n");
-        sb.append("CREATE_TMSTMP: [").append(createTS).append("]");
-        sb.append("\n");
-        sb.append("UPDT_ID: [").append(updateId).append("]");
-        sb.append("\n");
-        sb.append("UPDT_TMSTMP: [").append(updateTS).append("]");
-        sb.append("\n");
-
-        return sb.toString();
-    }
 
     /**
      * @return the createId
