@@ -3,59 +3,20 @@ package com.aws.poc.mongodb.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "POCTable")
+@Document(collection = "StoreDC")
 public class MongoPOCTable{
 
 	@Id
-    private int storeDcId;
+    private int id;
 	
-    private String storeId;
+    private String name;
 
-    private String dcCode;
+    private String gender;
 
-    private String dcName;
+    private String mobile;
     
-    private String ownerId;
+    private String salary;
 
-	public int getStoreDcId() {
-		return storeDcId;
-	}
-
-	public void setStoreDcId(int storeDcId) {
-		this.storeDcId = storeDcId;
-	}
-
-	public String getStoreId() {
-		return storeId;
-	}
-
-	public void setStoreId(String storeId) {
-		this.storeId = storeId;
-	}
-
-	public String getDcCode() {
-		return dcCode;
-	}
-
-	public void setDcCode(String dcCode) {
-		this.dcCode = dcCode;
-	}
-
-	public String getDcName() {
-		return dcName;
-	}
-
-	public void setDcName(String dcName) {
-		this.dcName = dcName;
-	}
-
-	public String getOwnerId() {
-		return ownerId;
-	}
-
-	public void setOwnerId(String ownerId) {
-		this.ownerId = ownerId;
-	}	
     
     
 }

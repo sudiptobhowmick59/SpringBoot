@@ -162,11 +162,6 @@ public class StudentServiceImpl implements StudentService {
 		if(null != pocTables && !pocTables.isEmpty()){
 			POCTable pocTable = pocTables.get(0);
 			MongoPOCTable mongoPOCTable = new MongoPOCTable();
-			mongoPOCTable.setDcCode(pocTable.getDcCode());
-			mongoPOCTable.setDcName(pocTable.getDcName());
-			mongoPOCTable.setOwnerId(pocTable.getOwnerId());
-			mongoPOCTable.setStoreDcId(pocTable.getStoreDcId());
-			mongoPOCTable.setStoreId(pocTable.getStoreId());
 			
 			mongoTmpl.save(mongoPOCTable);
 		}
