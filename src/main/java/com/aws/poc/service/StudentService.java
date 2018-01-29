@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.model.S3Object;
 import com.aws.poc.dto.Student;
+import com.aws.poc.mongodb.model.MongoPOCTable;
 import com.aws.poc.sqlserver.model.POCTable;
 
 
@@ -25,4 +26,10 @@ public interface StudentService {
 	public S3Object getFilesFromS3(String fileName) throws IOException;
 
 	public List<POCTable> findAllStoreDC();
+
+	public List<MongoPOCTable> findAllMongoStoreDC();
+
+	public List<com.aws.poc.mongodb.model.Student> findAllMongoStudents();
+
+	public List<MongoPOCTable> saveMongoStoreDC();
 }

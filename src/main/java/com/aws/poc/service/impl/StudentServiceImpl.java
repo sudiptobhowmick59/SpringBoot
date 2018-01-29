@@ -12,15 +12,18 @@ import java.util.stream.Stream;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.aws.poc.dto.Student;
+import com.aws.poc.mongodb.model.MongoPOCTable;
+import com.aws.poc.mongodb.repo.MongoPOCRepo;
+import com.aws.poc.mongodb.repo.StudentPOCRepo;
 import com.aws.poc.service.StudentService;
 import com.aws.poc.sqlserver.model.POCTable;
 import com.aws.poc.sqlserver.repo.StoreDCRepo;
@@ -28,6 +31,15 @@ import com.aws.poc.sqlserver.repo.StoreDCRepo;
 @Service
 public class StudentServiceImpl implements StudentService {
 
+	@Autowired
+	StudentPOCRepo studentMongoRepo;
+	
+	@Autowired
+	MongoPOCRepo mongoPOCRepo;
+	
+	@Autowired
+	MongoTemplate mongoTmpl;
+	
 	@Autowired
 	StoreDCRepo storeDcRepo;
 	
@@ -131,6 +143,34 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public List<POCTable> findAllStoreDC() {
 		return (List<POCTable>) storeDcRepo.findAll();
+	}
+	
+	@Override
+	public List<MongoPOCTable> findAllMongoStoreDC() {
+		return (List<MongoPOCTable>) mongoPOCRepo.findAll();
+	}
+	
+	@Override
+	public List<com.aws.poc.mongodb.model.Student> findAllMongoStudents() {
+		return (List<com.aws.poc.mongodb.model.Student>) studentMongoRepo.findAll();
+	}
+	
+	@Override
+	public List<MongoPOCTable> saveMongoStoreDC() {
+		
+		List<POCTable> pocTables = (List<POCTable>) storeDcRepo.findAll();
+		if(null != pocTables && !pocTables.isEmpty()){
+			POCTable pocTable = pocTables.get(0);
+			MongoPOCTable mongoPOCTable = new MongoPOCTable();
+			mongoPOCTable.setDcCode(pocTable.getDcCode());
+			mongoPOCTable.setDcName(pocTable.getDcName());
+			mongoPOCTable.setOwnerId(pocTable.getOwnerId());
+			mongoPOCTable.setStoreDcId(pocTable.getStoreDcId());
+			mongoPOCTable.setStoreId(pocTable.getStoreId());
+			
+			mongoTmpl.save(mongoPOCTable);
+		}
+		return (List<MongoPOCTable>) mongoPOCRepo.findAll();
 	}
 
 }
